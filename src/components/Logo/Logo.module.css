@@ -1,0 +1,11 @@
+/*To fully reuse the Logo, we will not style the Logo size responsively rather apply them inline whiling using */
+.Logo {
+    background-color: white;
+    padding: 8px;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.Logo img {
+    height: 100%;
+}

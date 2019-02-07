@@ -1,0 +1,44 @@
+.OrderSummary {
+    text-align: center;
+}
+
+.OrderSummary button {
+    display: inline-block;
+    padding: 0.5em 0.5em;
+    border-radius: 0.25em;
+    text-align: center;
+    font-size: 1em;
+    transition: background-color .1s linear, border-color .1s linear, color .1s linear;
+}
+
+.CheckOut {
+    border: 1px solid #5E8211;
+    background-color: #5E8211;
+    color: white;
+}
+
+.CheckOut:hover {
+    background-color: #7cab16;
+    border-color: #7cab16;
+    color: white;
+    cursor: pointer;
+}
+
+.Cancel {
+    background-color: #f5f5f5;
+    border-color: #DCDACF;
+    color: #444;
+    margin-left: 1em;
+}
+
+.Cancel:hover {
+    background-color: #ebebeb;
+    border-color: #DCDACF;
+    color: #111;
+}
+
+@media (min-width: 500px) {
+    .OrderSummary button {
+        padding: 0.75em 1.25em;
+    }
+}
