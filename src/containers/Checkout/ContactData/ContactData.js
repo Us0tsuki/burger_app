@@ -7,6 +7,7 @@ import axios from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as orderActions from '../../../store/actions/index';
+import { updateObject, validateFormEntry } from '../../../shared/utility';
 
 // import FormErrors from './FormErrors';
 
@@ -37,6 +38,20 @@ class ContactData extends Component {
                 validation: {
                     required: true,
                     isEmail: true
+                },
+                touched: false
+            },
+            telephone: {
+                entryType: 'input',
+                entryConfig: {
+                    type: 'tel',
+                    placeholder: 'Your Phone'
+                },
+                value: '',
+                valid: false,
+                validation: {
+                    required: true,
+                    isPhone: true
                 },
                 touched: false
             },
@@ -85,31 +100,13 @@ class ContactData extends Component {
         valid: false
     }
 
-    validate(value, rules) {
-        let isValid = true;
-        if(!rules) return isValid;
-        if(rules.required && value.trim() === '') isValid = false;
-        if(rules.minLen && value.length < rules.minLen) isValid = false;
-        if(rules.maxLen && value.length > rules.maxLen) isValid = false;
-        if(rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value);
-        }
-        if(rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value);
-        }
-        return isValid;
-    }
     inputChangeHandler = (e, id) => {
-        //Note spread operator will only do a shallow copy of the object,nested object will not be copied.
-        const formEntries = { ...this.state.formEntries };
-        //copy the inner object deeply
-        const formEntry = { ...formEntries[id] };
-        formEntry.value = e.target.value.trim();
-        formEntry.valid = this.validate(formEntry.value, formEntry.validation);
-        formEntry.touched = true;
-        formEntries[id] = formEntry;
+        const formEntry = updateObject(this.state.formEntries[id], {
+            value: e.target.value.trim(),
+            valid: validateFormEntry(e.target.value.trim(), this.state.formEntries[id].validation),
+            touched: true
+        })
+        const formEntries = updateObject(this.state.formEntries, {[id]: formEntry});
         let valid = true;
         for(let id in formEntries) {
             valid = formEntries[id].valid && valid;

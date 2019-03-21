@@ -6,7 +6,7 @@ import Input from '../../components/UI/Input/Input';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import styles from './Auth.module.css';
-
+import { updateObject, validateFormEntry } from '../../shared/utility';
 
 class Auth extends Component {
     state = {
@@ -43,33 +43,14 @@ class Auth extends Component {
         isSignUp: true
     }
 
-    validate(value, rules) {
-        let isValid = true;
-        if(!rules) return isValid;
-        if(rules.required && value.trim() === '') isValid = false;
-        if(rules.minLen && value.length < rules.minLen) isValid = false;
-        if(rules.maxLen && value.length > rules.maxLen) isValid = false;
-        if(rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value);
-        }
-        if(rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value);
-        }
-        return isValid;
-    }
-
     inputChangeHandler = (e, id) => {
-        const updatedEntries = {
-            ...this.state.formEntries,
-            [id]: {
-                ...this.state.formEntries[id],
+        const updatedEntries = updateObject(this.state.formEntries, {
+            [id]: updateObject(this.state.formEntries[id], {
                 value: e.target.value,
-                valid: this.validate(e.target.value, this.state.formEntries[id].validation),
+                valid: validateFormEntry(e.target.value, this.state.formEntries[id].validation),
                 touched: true
-            }
-        }
+            })
+        });
         this.setState({formEntries: updatedEntries});
     }
 
