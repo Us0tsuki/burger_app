@@ -35,7 +35,8 @@ class ContactData extends Component {
                 value: '',
                 valid: false,
                 validation: {
-                    required: true
+                    required: true,
+                    isEmail: true
                 },
                 touched: false
             },
@@ -63,7 +64,8 @@ class ContactData extends Component {
                 validation: {
                     required: true,
                     minLen: 5,
-                    maxLen: 5
+                    maxLen: 5,
+                    isNumeric: true
                 },
                 touched: false
             },
@@ -85,9 +87,18 @@ class ContactData extends Component {
 
     validate(value, rules) {
         let isValid = true;
-        if(rules.required && value === '') isValid = false;
+        if(!rules) return isValid;
+        if(rules.required && value.trim() === '') isValid = false;
         if(rules.minLen && value.length < rules.minLen) isValid = false;
         if(rules.maxLen && value.length > rules.maxLen) isValid = false;
+        if(rules.isEmail) {
+            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            isValid = pattern.test(value);
+        }
+        if(rules.isNumeric) {
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value);
+        }
         return isValid;
     }
     inputChangeHandler = (e, id) => {
@@ -147,9 +158,10 @@ class ContactData extends Component {
         const order = {
             ingredients: this.props.ings,
             price: this.props.price.toFixed(2),
-            orderData: formData
+            orderData: formData,
+            userId: this.props.userId
         }
-        this.props.purchaseBurger(order);
+        this.props.purchaseBurger(order, this.props.token);
         // this.props.history.push('/');
     }
 
@@ -195,13 +207,15 @@ const mapStateToProps = state => {
     return {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        loading: state.order.loading
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        purchaseBurger: orderData => dispatch(orderActions.purchaseBurger(orderData))
+        purchaseBurger: (orderData, token) => dispatch(orderActions.purchaseBurger(orderData, token))
     };
 }
 
