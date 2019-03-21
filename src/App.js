@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { checkAuthStatus } from './store/actions/index';
 import Layout from './containers/Layout/Layout';
 import Spinner from './components/UI/Spinner/Spinner';
-const BurgerBuilder = lazy(() => import('./containers/BurgerBuilder/BurgerBuilder'));
+import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
+
 const Checkout = lazy(() => import('./containers/Checkout/Checkout'));
 const Orders = lazy(() => import('./containers/Orders/Orders'));
 const Auth = lazy(() => import('./containers/Auth/Auth'));
